@@ -2,26 +2,22 @@ package com.drivermonitor.gui;
 
 import com.drivermonitor.uitls.Utils;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class RegistrationGUI extends Scene implements EventHandler<ActionEvent> {
 
     // set root layout based on need
-    private static final VBox root = new VBox(20);
+    private static final VBox root = new VBox(15);
     private static final int WIDTH = 350;
     private static final int HEIGHT = 500;
     private static final String TITLE = "Registration";
@@ -51,7 +47,7 @@ public class RegistrationGUI extends Scene implements EventHandler<ActionEvent> 
         // customize header & add design in root layout
         root.setAlignment(Pos.TOP_CENTER);
         root.setBackground(Utils.getBackground(Color.WHITESMOKE));
-        root.setPadding(new Insets(50,20,20,20));
+        root.setPadding(new Insets(50, 20, 20, 20));
 
         // create header
         createHeadingGUI();
@@ -81,10 +77,19 @@ public class RegistrationGUI extends Scene implements EventHandler<ActionEvent> 
         phoneTxtFld = new TextField("Enter phone number");
         emailTxtFld = new TextField("Enter email");
         passwordTxtFld = new PasswordField();
+
         maleCkBox = new CheckBox("Male");
         femaleCkBox = new CheckBox("Female");
         customerCkBox = new CheckBox("Customer");
-        customerCkBox = new CheckBox("Driver");
+        driverCkBox = new CheckBox("Driver");
+
+        customerCkBox.setSelected(true);
+        maleCkBox.setSelected(true);
+
+        maleCkBox.setOnAction(this);
+        femaleCkBox.setOnAction(this);
+        customerCkBox.setOnAction(this);
+        driverCkBox.setOnAction(this);
 
         // init all horizontal box
         HBox fullNameHBox = Utils.getFormattedHBox(new Label("Full name"), fullNameTxtFld);
@@ -92,9 +97,13 @@ public class RegistrationGUI extends Scene implements EventHandler<ActionEvent> 
         HBox phoneHBox = Utils.getFormattedHBox(new Label("Phone"), phoneTxtFld);
         HBox emailHBox = Utils.getFormattedHBox(new Label("Email"), emailTxtFld);
         HBox passwordHBox = Utils.getFormattedHBox(new Label("Password"), passwordTxtFld);
+        HBox genderHBox = Utils.getFormattedHBox(new Label("Gender"), maleCkBox, femaleCkBox);
+        HBox userHBoxTitle = Utils.getFormattedHBox(new Label("Customer or Driver"));
+        HBox userHBox = Utils.getFormattedHBox(customerCkBox, driverCkBox);
 
         // add all children
-        addChildren(fullNameHBox, usernameHBox, phoneHBox, emailHBox, passwordHBox);
+        addChildren(fullNameHBox, usernameHBox, phoneHBox, emailHBox,
+                passwordHBox, genderHBox, userHBoxTitle, userHBox);
     }
 
 
@@ -104,14 +113,14 @@ public class RegistrationGUI extends Scene implements EventHandler<ActionEvent> 
         cancelBtn = new Button("Cancel");
         cancelBtn.setBackground(Utils.getBackground(Color.RED));
         cancelBtn.setTextFill(Color.WHITE);
-        cancelBtn.setPadding(new Insets(10,10,10,10));
+        cancelBtn.setPadding(new Insets(10, 10, 10, 10));
         cancelBtn.setOnAction(this);
 
         // register button
         registerBtn = new Button("Register");
         registerBtn.setBackground(Utils.getBackground(Color.BLUE));
         registerBtn.setTextFill(Color.WHITE);
-        registerBtn.setPadding(new Insets(10,10,10,10));
+        registerBtn.setPadding(new Insets(10, 10, 10, 10));
         registerBtn.setOnAction(this);
 
         // add both button horizontally
@@ -120,7 +129,7 @@ public class RegistrationGUI extends Scene implements EventHandler<ActionEvent> 
     }
 
     // add children to root layout
-    private void addChildren(Node... node){
+    private void addChildren(Node... node) {
         root.getChildren().addAll(node);
     }
 
@@ -133,13 +142,47 @@ public class RegistrationGUI extends Scene implements EventHandler<ActionEvent> 
         }
 
         // cancel button
-        else if (event.getSource().equals(cancelBtn)) {
+        if (event.getSource().equals(cancelBtn)) {
             System.exit(0);
+        }
+
+        // gender checkbox
+        if (event.getSource().equals(maleCkBox)) {
+            femaleCkBox.setSelected(false);
+        } else if (event.getSource().equals(femaleCkBox)) {
+            maleCkBox.setSelected(false);
+        }
+
+        // customer driver checkbox
+        if (event.getSource().equals(customerCkBox)) {
+            driverCkBox.setSelected(false);
+        } else if (event.getSource().equals(driverCkBox)) {
+            customerCkBox.setSelected(false);
         }
     }
 
     // todo register & save data into database
     private void handleRegisterButtonAction() {
+        String fullName = fullNameTxtFld.getText();
+        String username = usernameTxtFld.getText();
+        String phone = phoneTxtFld.getText();
+        String email = emailTxtFld.getText();
+        String password = emailTxtFld.getText();
+        String gender = getGender();
+        String user = getUser();
+
         System.out.println("User Registration");
+    }
+
+    // return gender from checkbox
+    private String getGender() {
+        // todo gender
+        return "";
+    }
+
+    // return user type from checkbox
+    private String getUser() {
+        // todo user
+        return "";
     }
 }

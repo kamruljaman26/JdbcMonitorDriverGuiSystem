@@ -25,10 +25,9 @@ public class DbConnection {
     private DbConnection() {
         try {
             System.out.printf("Username:password as environment variable: [%s]:[%s]\n", DB_USERNAME, DB_PASS);
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/blogapi", DB_USERNAME, DB_PASS);
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ordersystem", DB_USERNAME, DB_PASS);
             System.out.println("Connection created");
         } catch (SQLException ex) {
-            System.out.println("ecxsdfg");
             Logger.getLogger(DbConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -37,9 +36,6 @@ public class DbConnection {
         return connection;
     }
 
-//    public static void main(String[] args) {
-//        DbConnection.getConnection();
-//    }
 }
 
 
