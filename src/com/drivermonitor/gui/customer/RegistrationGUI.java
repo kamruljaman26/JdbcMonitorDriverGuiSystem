@@ -1,5 +1,6 @@
-package com.drivermonitor.gui;
+package com.drivermonitor.gui.customer;
 
+import com.drivermonitor.MainApplication;
 import com.drivermonitor.uitls.Utils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -37,7 +38,6 @@ public class RegistrationGUI extends Scene implements EventHandler<ActionEvent> 
     private CheckBox femaleCkBox;
     private CheckBox customerCkBox;
     private CheckBox driverCkBox;
-
 
     public RegistrationGUI(Stage primaryStage) {
         super(root, WIDTH, HEIGHT);
@@ -110,7 +110,7 @@ public class RegistrationGUI extends Scene implements EventHandler<ActionEvent> 
     // init all button & design
     private void createBtnGUI() {
         // cancel button
-        cancelBtn = new Button("Cancel");
+        cancelBtn = new Button("Back");
         cancelBtn.setBackground(Utils.getBackground(Color.RED));
         cancelBtn.setTextFill(Color.WHITE);
         cancelBtn.setPadding(new Insets(10, 10, 10, 10));
@@ -143,7 +143,7 @@ public class RegistrationGUI extends Scene implements EventHandler<ActionEvent> 
 
         // cancel button
         if (event.getSource().equals(cancelBtn)) {
-            System.exit(0);
+            primaryStage.setScene(MainApplication.scenes.get("home"));
         }
 
         // gender checkbox
@@ -176,13 +176,11 @@ public class RegistrationGUI extends Scene implements EventHandler<ActionEvent> 
 
     // return gender from checkbox
     private String getGender() {
-        // todo gender
         return "";
     }
 
     // return user type from checkbox
     private String getUser() {
-        // todo user
         return "";
     }
 }

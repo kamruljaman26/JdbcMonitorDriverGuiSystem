@@ -1,5 +1,7 @@
-package com.drivermonitor.gui;
+package com.drivermonitor.gui.customer;
 
+import com.drivermonitor.MainApplication;
+import com.drivermonitor.gui.admin.AdminGUI;
 import com.drivermonitor.uitls.Utils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -8,7 +10,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -26,6 +27,7 @@ public class HomeGUI extends Scene implements EventHandler<ActionEvent> {
     // init buttons
     private Button loginBtn;
     private Button registerBtn;
+    private Button adminBtn;
 
     public HomeGUI(Stage primaryStage) {
         super(root, WIDTH, HEIGHT);
@@ -58,15 +60,14 @@ public class HomeGUI extends Scene implements EventHandler<ActionEvent> {
         // init button
         loginBtn = new Button("Login");
         registerBtn = new Button("Registration");
+        adminBtn = new Button("Admin");
 
         loginBtn.setOnAction(this);
         registerBtn.setOnAction(this);
-
-        // init all horizontal box
-        HBox fullNameHBox = Utils.getFormattedHBox(loginBtn, registerBtn);
+        adminBtn.setOnAction(this);
 
         // add all children
-        addChildren(fullNameHBox);
+        addChildren(loginBtn,registerBtn,adminBtn);
     }
 
 
@@ -81,13 +82,19 @@ public class HomeGUI extends Scene implements EventHandler<ActionEvent> {
         // login button
         if (event.getSource().equals(loginBtn)) {
             // load login GUI
-            primaryStage.setScene(new LoginGUI(primaryStage));
+            primaryStage.setScene(MainApplication.scenes.get("login"));
         }
 
         // registration button
         if (event.getSource().equals(registerBtn)) {
             // load registration GUI
-            primaryStage.setScene(new RegistrationGUI(primaryStage));
+            primaryStage.setScene(MainApplication.scenes.get("reg"));
+        }
+
+        // admin button
+        if (event.getSource().equals(adminBtn)) {
+            // load registration GUI
+            primaryStage.setScene(MainApplication.scenes.get("admin"));
         }
     }
 

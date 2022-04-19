@@ -1,5 +1,10 @@
-package com.drivermonitor.gui;
+package com.drivermonitor.gui.customer;
 
+import com.drivermonitor.MainApplication;
+import com.drivermonitor.database.dao.CustomerDAO;
+import com.drivermonitor.database.dao.RegistrationDAO;
+import com.drivermonitor.database.pojo.Customer;
+import com.drivermonitor.database.pojo.Registration;
 import com.drivermonitor.uitls.Utils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -32,6 +37,7 @@ public class LoginGUI extends Scene implements EventHandler<ActionEvent> {
 
     private TextField emailTxtFld;
     private PasswordField passTxtFld;
+    private Label warningLabel;
 
     public LoginGUI(Stage primaryStage) {
         super(root, WIDTH, HEIGHT);
@@ -62,10 +68,10 @@ public class LoginGUI extends Scene implements EventHandler<ActionEvent> {
     private void createHomeGUI() {
 
         // init button
-        backBtn = new Button("Cancel");
-        backBtn.setBackground(Utils.getBackground(Color.RED));
-        backBtn.setTextFill(Color.WHITE);
+        backBtn = new Button("Back");
         loginBtn = new Button("Login");
+        warningLabel = new Label();
+        warningLabel.setTextFill(Color.RED);
 
         emailTxtFld = new TextField();
         passTxtFld = new PasswordField();
@@ -80,7 +86,7 @@ public class LoginGUI extends Scene implements EventHandler<ActionEvent> {
         HBox fullNameHBox = Utils.getFormattedHBox(backBtn, loginBtn);
 
         // add all children
-        addChildren(emailHBox, passwordHBox, fullNameHBox);
+        addChildren(emailHBox, passwordHBox, fullNameHBox, warningLabel);
     }
 
 
@@ -99,13 +105,51 @@ public class LoginGUI extends Scene implements EventHandler<ActionEvent> {
 
         // back button button
         if (event.getSource().equals(backBtn)) {
-            System.exit(0);
+            primaryStage.setScene(MainApplication.scenes.get("home"));
+            warningLabel.setText("");
         }
     }
 
-    // todo: validate and login
+    // handle login and validation
     private void handleLoginCustomer() {
 
+        // dao
+        RegistrationDAO regDao = new RegistrationDAO();
+        CustomerDAO cusDao = new CustomerDAO();
+
+        String email = emailTxtFld.getText();
+        String pass = passTxtFld.getText();
+
+        System.out.println("Email: " + email);
+        System.out.println("Pass: " + pass);
+        System.out.println(pass);
+
+        if (email.equals("") || pass.equals("")) {
+            warningLabel.setText("email or password can't be empty");
+        }
+
+        Customer customer = null;
+        for (Registration reg : regDao.findAll()) {
+            // check email and pass
+            if (reg.getEmail().equals(email) && reg.getPass().equals(pass)) {
+                // check register user is customer or not
+                for (Customer cus : cusDao.findAll()) {
+                    if (cus.getReg_id() == reg.getReg_id()) {
+                        customer = cus;
+                    }
+                }
+            }
+        }
+
+        // if customer font and validation done and customer is not null-> login success
+        if (customer != null) {
+            CustomerProfileGUI customerGUI = (CustomerProfileGUI) MainApplication.scenes.get("customer_profile_panel");
+            customerGUI.setCustomer(customer);
+            primaryStage.setScene(customerGUI);
+            warningLabel.setText("");
+        }else {
+            warningLabel.setText("Invalid username or password! try again");
+        }
     }
 
 }
