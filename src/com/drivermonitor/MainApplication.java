@@ -1,5 +1,6 @@
 package com.drivermonitor;
 
+import com.drivermonitor.gui.HomeGUI;
 import com.drivermonitor.gui.RegistrationGUI;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -15,7 +16,7 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("My First JavaFX GUI");
-        scene2 = new RegistrationGUI(primaryStage);
+        scene2 = new HomeGUI(primaryStage);
         primaryStage.setScene(scene2);
         primaryStage.show();
     }
