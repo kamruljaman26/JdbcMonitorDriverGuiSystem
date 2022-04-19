@@ -9,31 +9,32 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-// todo: fixed according to ERD
 public class RegistrationDAO extends AbstractDao<Registration> {
 
     // MySQL QUERY
     private final String TABLE_NAME = "registration";
-    private final String CREATE = String.format("INSERT INTO %s (full_name, email, pass,phone_num,address) "
+    private final String CREATE = String.format("INSERT INTO %s (email, pass, phone_num, address, rest_id) "
             + "VALUES (?, ?, ?, ?, ?);", TABLE_NAME);
-    private final String UPDATE = String.format("UPDATE %s SET full_name=?, email=?, pass=?, phone_num=? , " +
-            "address=? WHERE reg_id=?;", TABLE_NAME);
+    private final String UPDATE = String.format("UPDATE %s SET email=?, pass=?, phone_num=?, address=? , " +
+            "rest_id=? WHERE reg_id=?;", TABLE_NAME);
     private final String DELETE = String.format("DELETE FROM %s WHERE reg_id = ?;", TABLE_NAME);
     private final String READ_ID = String.format("SELECT * FROM %s WHERE reg_id = ?;", TABLE_NAME);
-    private final String READ_ALL = String.format("SELECT * FROM %s;", TABLE_NAME);;
+    private final String READ_ALL = String.format("SELECT * FROM %s;", TABLE_NAME);
+    ;
 
     @Override
-    Registration create(Registration object) {
+    public Registration create(Registration object) {
         try {
             // create and execute db statement
             statement = connection.prepareStatement(CREATE);
-            statement.setString(1, object.getFullName());
-            statement.setString(2, object.getEmail());
-            statement.setString(3, object.getPassword());
-            statement.setString(4, object.getPhoneNum());
-            statement.setString(5, object.getAddress());
-            statement.executeUpdate();
+            statement.setString(1, object.getEmail());
+            statement.setString(2, object.getPass());
+            statement.setString(3, object.getPhone_num());
+            statement.setString(4, object.getAddress());
+            statement.setInt(5, object.getRest_id());
+            int i = statement.executeUpdate();
             statement.close();
+            object.setReg_id(i);
             return object;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -42,17 +43,20 @@ public class RegistrationDAO extends AbstractDao<Registration> {
     }
 
     @Override
-    Registration update(Registration object) {
+    public Registration update(Registration object) {
         try {
+            //    private final String UPDATE = String.format("UPDATE %s SET email=?, pass=?, phone_num=?, address=? , " +
+            //            "rest_id=? WHERE reg_id=?;", TABLE_NAME);
             statement = connection.prepareStatement(UPDATE);
-            statement.setString(1, object.getFullName());
-            statement.setString(2, object.getEmail());
-            statement.setString(3, object.getPassword());
-            statement.setString(4, object.getPhoneNum());
-            statement.setString(5, object.getAddress());
-            statement.setInt(6, object.getRegID());
-            statement.executeUpdate();
+            statement.setString(1, object.getEmail());
+            statement.setString(2, object.getPass());
+            statement.setString(3, object.getPhone_num());
+            statement.setString(4, object.getAddress());
+            statement.setInt(5, object.getRest_id());
+            statement.setInt(6, object.getReg_id());
+            int i = statement.executeUpdate();
             statement.close();
+            object.setReg_id(i);
             return object;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -61,11 +65,11 @@ public class RegistrationDAO extends AbstractDao<Registration> {
     }
 
     @Override
-    int delete(Registration object) {
+    public int delete(Registration object) {
         try {
             // create and execute db statement
             statement = connection.prepareStatement(DELETE);
-            statement.setInt(1, object.getRegID());
+            statement.setInt(1, object.getReg_id());
             int i = statement.executeUpdate();
             statement.close();
             return i;
@@ -76,20 +80,20 @@ public class RegistrationDAO extends AbstractDao<Registration> {
     }
 
     @Override
-    Registration findByID(String id) {
+    public Registration findByID(int id) {
         try {
             statement = connection.prepareStatement(READ_ID);
-            statement.setInt(1, Integer.parseInt(id));
+            statement.setInt(1, id);
 
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 Registration registration = new Registration();
-                registration.setRegID(resultSet.getInt("reg_id"));
-                registration.setFullName(resultSet.getString("full_name"));
-                registration.setPassword(resultSet.getString("pass"));
-                registration.setPhoneNum(resultSet.getString("phone_num"));
+                registration.setReg_id(resultSet.getInt("reg_id"));
                 registration.setEmail(resultSet.getString("email"));
+                registration.setPass(resultSet.getString("pass"));
+                registration.setPhone_num(resultSet.getString("phone_num"));
                 registration.setAddress(resultSet.getString("address"));
+                registration.setRest_id(resultSet.getInt("rest_id"));
                 return registration;
             } else return null;
         } catch (SQLException ex) {
@@ -99,7 +103,7 @@ public class RegistrationDAO extends AbstractDao<Registration> {
     }
 
     @Override
-    List<Registration> findAll() {
+    public List<Registration> findAll() {
         try {
             statement = connection.prepareStatement(READ_ALL);
             ArrayList<Registration> list = new ArrayList<>();
@@ -107,12 +111,14 @@ public class RegistrationDAO extends AbstractDao<Registration> {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Registration registration = new Registration();
-                registration.setRegID(resultSet.getInt("reg_id"));
-                registration.setFullName(resultSet.getString("full_name"));
-                registration.setPassword(resultSet.getString("pass"));
-                registration.setPhoneNum(resultSet.getString("phone_num"));
+                //email, pass, phone_num, address, rest_id
+                registration.setReg_id(resultSet.getInt("reg_id"));
                 registration.setEmail(resultSet.getString("email"));
+                registration.setPass(resultSet.getString("pass"));
+                registration.setPhone_num(resultSet.getString("phone_num"));
                 registration.setAddress(resultSet.getString("address"));
+                registration.setRest_id(resultSet.getInt("rest_id"));
+
                 list.add(registration);
             }
 
@@ -123,27 +129,26 @@ public class RegistrationDAO extends AbstractDao<Registration> {
         return null;
     }
 
-    // test dao
+/*    // test dao
     public static void main(String[] args) {
         Registration registration = new Registration();
-        registration.setFullName("Zohan");
-        registration.setEmail("zohan26@gmail.com");
-        registration.setPhoneNum("+880545985152");
-        registration.setPassword("65567");
-        registration.setAddress("Hatirjhil, Bangladesh");
+        registration.setEmail("zosdhagaaddn@gmail.com");
+        registration.setPhone_num("+23sadd23ad5");
+        registration.setPass("fsadfc");
+        registration.setAddress("Damaadmm");
+        registration.setRest_id(2);
 
         AbstractDao<Registration> dao = new RegistrationDAO();
-//        dao.create(registration);
+//        Registration registration1 = dao.create(registration);
 
-        Registration adib = new Registration();
-        adib.setRegID(3);
-        adib.setFullName("Zohan Norr Hasan");
-        adib.setEmail("zohan.hasan26@gmail.com");
-        adib.setPhoneNum("+880545982");
-        adib.setPassword("655asd67");
-        adib.setAddress("Dhaka, Bangladesh");
-//        dao.update(adib);
+//        registration.setPass("1234ad5");
+//        dao.update(registration);
 
-        System.out.println(dao.findAll());
-    }
+//        System.out.println(dao.findAll());
+//        System.out.println(dao.findByID("1"));
+//        registration.setReg_id(12);
+        Registration byID = dao.findByID("13");
+        byID.setPhone_num("123AA123");
+        System.out.println(dao.update(byID));
+    }*/
 }

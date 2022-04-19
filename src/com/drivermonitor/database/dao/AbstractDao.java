@@ -17,19 +17,19 @@ public abstract class AbstractDao<T> {
     }
 
     // insert data into the table
-    abstract T create(T object);
+    public abstract T create(T object);
 
     // insert data into the table
-    abstract T update(T object);
+    public abstract T update(T object);
 
     // delete
-    abstract int delete(T object);
+    public abstract int delete(T object);
 
     // find by id
-    abstract T findByID(String id);
+    public abstract T findByID(int id);
 
     // read all from table
-    abstract List<T> findAll();
+    public abstract List<T> findAll();
 
     // total data in table
     public int size() {

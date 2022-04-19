@@ -6,12 +6,12 @@ public class Restaurant {
     private String offers;
     private String type_of_food;
     private String meal_name;
-    private String order_id;
+    private int order_id;
 
     public Restaurant() {
     }
 
-    public Restaurant(String offers, String type_of_food, String meal_name, String order_id) {
+    public Restaurant(String offers, String type_of_food, String meal_name, int order_id) {
         this.offers = offers;
         this.type_of_food = type_of_food;
         this.meal_name = meal_name;
@@ -50,11 +50,11 @@ public class Restaurant {
         this.meal_name = meal_name;
     }
 
-    public String getOrder_id() {
+    public int getOrder_id() {
         return order_id;
     }
 
-    public void setOrder_id(String order_id) {
+    public void setOrder_id(int order_id) {
         this.order_id = order_id;
     }
 

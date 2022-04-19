@@ -20,7 +20,7 @@ public class OrderDAO extends AbstractDao<Order> {
 
 
     @Override
-    Order create(Order object) {
+    public Order create(Order object) {
         try {
             // create and execute db statement
             statement = connection.prepareStatement(CREATE);
@@ -39,7 +39,7 @@ public class OrderDAO extends AbstractDao<Order> {
 
 
     @Override
-    Order update(Order object) {
+    public Order update(Order object) {
         try {
             // INSERT INTO %s (tax, meals, price, driver_name)
             statement = connection.prepareStatement(UPDATE);
@@ -59,7 +59,7 @@ public class OrderDAO extends AbstractDao<Order> {
 
 
     @Override
-    int delete(Order object) {
+    public int delete(Order object) {
         try {
             // create and execute db statement
             statement = connection.prepareStatement(DELETE);
@@ -75,10 +75,10 @@ public class OrderDAO extends AbstractDao<Order> {
 
 
     @Override
-    Order findByID(String id) {
+    public Order findByID(int id) {
         try {
             statement = connection.prepareStatement(READ_ID);
-            statement.setInt(1, Integer.parseInt(id));
+            statement.setInt(1, id);
 
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -98,7 +98,7 @@ public class OrderDAO extends AbstractDao<Order> {
 
 
     @Override
-    List<Order> findAll() {
+    public List<Order> findAll() {
         try {
             statement = connection.prepareStatement(READ_ALL);
             ArrayList<Order> list = new ArrayList<>();

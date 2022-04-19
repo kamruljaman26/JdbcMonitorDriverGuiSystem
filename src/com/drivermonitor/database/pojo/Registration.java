@@ -2,38 +2,30 @@ package com.drivermonitor.database.pojo;
 
 public class Registration {
 
-    private int regID;
-    private String fullName;
+    private int reg_id;
     private String email;
-    private String password;
-    private String phoneNum;
+    private String pass;
+    private String phone_num;
     private String address;
+    private int rest_id;
 
     public Registration() {
     }
 
-    public Registration(String fullName, String email, String password, String phoneNum, String address) {
-        this.fullName = fullName;
+    public Registration(String email, String pass, String phone_num, String address, int rest_id) {
         this.email = email;
-        this.password = password;
-        this.phoneNum = phoneNum;
+        this.pass = pass;
+        this.phone_num = phone_num;
         this.address = address;
+        this.rest_id = rest_id;
     }
 
-    public int getRegID() {
-        return regID;
+    public int getReg_id() {
+        return reg_id;
     }
 
-    public void setRegID(int regID) {
-        this.regID = regID;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setReg_id(int reg_id) {
+        this.reg_id = reg_id;
     }
 
     public String getEmail() {
@@ -44,20 +36,20 @@ public class Registration {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPass() {
+        return pass;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPass(String pass) {
+        this.pass = pass;
     }
 
-    public String getPhoneNum() {
-        return phoneNum;
+    public String getPhone_num() {
+        return phone_num;
     }
 
-    public void setPhoneNum(String phoneNum) {
-        this.phoneNum = phoneNum;
+    public void setPhone_num(String phone_num) {
+        this.phone_num = phone_num;
     }
 
     public String getAddress() {
@@ -68,23 +60,23 @@ public class Registration {
         this.address = address;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Registration that = (Registration) o;
-        return regID == that.regID;
+    public int getRest_id() {
+        return rest_id;
+    }
+
+    public void setRest_id(int rest_id) {
+        this.rest_id = rest_id;
     }
 
     @Override
     public String toString() {
         return "Registration{" +
-                "regID=" + regID +
-                ", fullName='" + fullName + '\'' +
+                "reg_id=" + reg_id +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", phoneNum='" + phoneNum + '\'' +
+                ", pass='" + pass + '\'' +
+                ", phone_num='" + phone_num + '\'' +
                 ", address='" + address + '\'' +
+                ", rest_id=" + rest_id +
                 '}';
     }
 }

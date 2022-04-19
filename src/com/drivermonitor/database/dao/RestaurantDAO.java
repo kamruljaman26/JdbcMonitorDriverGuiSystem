@@ -1,34 +1,33 @@
 package com.drivermonitor.database.dao;
 
-import com.drivermonitor.database.pojo.Order;
-
+import com.drivermonitor.database.pojo.Restaurant;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RestaurantDAO extends AbstractDao<Order> {
+// todo: not tested yet
+public class RestaurantDAO extends AbstractDao<Restaurant> {
 
     // MySQL QUERY
-    private final String TABLE_NAME = "order_t";
-    private final String CREATE = String.format("INSERT INTO %s (tax, meals, price, driver_name) "
+    private final String TABLE_NAME = "restaurant";
+    private final String CREATE = String.format("INSERT INTO %s (offers, type_of_food, meal_name, order_id) "
             + "VALUES (?, ?, ?, ?);", TABLE_NAME);
-    private final String UPDATE = String.format("UPDATE %s SET tax=?, meals=?, price=?, driver_name=? WHERE order_id=?;",
+    private final String UPDATE = String.format("UPDATE %s SET offers=?, type_of_food=?, meal_name=?, order_id=? WHERE rest_id=?;",
             TABLE_NAME);
-    private final String DELETE = String.format("DELETE FROM %s WHERE order_id = ?;", TABLE_NAME);
-    private final String READ_ID = String.format("SELECT * FROM %s WHERE order_id = ?;", TABLE_NAME);
+    private final String DELETE = String.format("DELETE FROM %s WHERE rest_id = ?;", TABLE_NAME);
+    private final String READ_ID = String.format("SELECT * FROM %s WHERE rest_id = ?;", TABLE_NAME);
     private final String READ_ALL = String.format("SELECT * FROM %s;", TABLE_NAME);
 
-
     @Override
-    Order create(Order object) {
+    public Restaurant create(Restaurant object) {
         try {
             // create and execute db statement
             statement = connection.prepareStatement(CREATE);
-            statement.setFloat(1, (float) object.getTax());
-            statement.setString(2, object.getMeals());
-            statement.setFloat(3, (float) object.getPrice());
-            statement.setString(4, object.getDriver_name());
+            statement.setString(1, object.getOffers());
+            statement.setString(2, object.getType_of_food());
+            statement.setString(3, object.getMeal_name());
+            statement.setInt(4, object.getOrder_id());
             statement.executeUpdate();
             statement.close();
             return object;
@@ -38,17 +37,16 @@ public class RestaurantDAO extends AbstractDao<Order> {
         return null;
     }
 
-
     @Override
-    Order update(Order object) {
+    public Restaurant update(Restaurant object) {
         try {
-            // INSERT INTO %s (tax, meals, price, driver_name)
+            // create and execute db statement
             statement = connection.prepareStatement(UPDATE);
-            statement.setFloat(1, (float) object.getTax());
-            statement.setString(2, object.getMeals());
-            statement.setFloat(3, (float) object.getPrice());
-            statement.setString(4, object.getDriver_name());
-            statement.setInt(5, object.getOrder_id());
+            statement.setString(1, object.getOffers());
+            statement.setString(2, object.getType_of_food());
+            statement.setString(3, object.getMeal_name());
+            statement.setInt(4, object.getOrder_id());
+            statement.setInt(5, object.getRest_id());
             statement.executeUpdate();
             statement.close();
             return object;
@@ -58,13 +56,12 @@ public class RestaurantDAO extends AbstractDao<Order> {
         return null;
     }
 
-
     @Override
-    int delete(Order object) {
+    public int delete(Restaurant object) {
         try {
             // create and execute db statement
             statement = connection.prepareStatement(DELETE);
-            statement.setInt(1, object.getOrder_id());
+            statement.setInt(1, object.getRest_id());
             int i = statement.executeUpdate();
             statement.close();
             return i;
@@ -74,22 +71,23 @@ public class RestaurantDAO extends AbstractDao<Order> {
         return 0;
     }
 
-
     @Override
-    Order findByID(String id) {
+    public Restaurant findByID(int id) {
         try {
             statement = connection.prepareStatement(READ_ID);
-            statement.setInt(1, Integer.parseInt(id));
+            statement.setInt(1, id);
 
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                Order order = new Order();
-                order.setOrder_id(resultSet.getInt("tax"));
-                order.setTax(resultSet.getFloat("tax"));
-                order.setMeals(resultSet.getString("meals"));
-                order.setPrice(resultSet.getFloat("price"));
-                order.setDriver_name(resultSet.getString("driver_name"));
-                return order;
+                //(offers, type_of_food, meal_name, order_id)
+                Restaurant restaurant = new Restaurant();
+                restaurant.setRest_id(resultSet.getInt("rest_id"));
+                restaurant.setOffers(resultSet.getString("offers"));
+                restaurant.setOffers(resultSet.getString("type_of_food"));
+                restaurant.setOffers(resultSet.getString("meal_name"));
+                restaurant.setOrder_id(resultSet.getInt("order_id"));
+
+                return restaurant;
             } else return null;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -97,51 +95,29 @@ public class RestaurantDAO extends AbstractDao<Order> {
         return null;
     }
 
-
     @Override
-    List<Order> findAll() {
+    public List<Restaurant> findAll() {
         try {
             statement = connection.prepareStatement(READ_ALL);
-            ArrayList<Order> list = new ArrayList<>();
+            ArrayList<Restaurant> list = new ArrayList<>();
 
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
 
-                Order order = new Order();
-                order.setOrder_id(resultSet.getInt("order_id"));
-                order.setTax(resultSet.getFloat("tax"));
-                order.setMeals(resultSet.getString("meals"));
-                order.setPrice(resultSet.getFloat("price"));
-                order.setDriver_name(resultSet.getString("driver_name"));
+                //(offers, type_of_food, meal_name, order_id)
+                Restaurant restaurant = new Restaurant();
+                restaurant.setRest_id(resultSet.getInt("rest_id"));
+                restaurant.setOffers(resultSet.getString("offers"));
+                restaurant.setOffers(resultSet.getString("type_of_food"));
+                restaurant.setOffers(resultSet.getString("meal_name"));
+                restaurant.setOrder_id(resultSet.getInt("order_id"));
 
-                list.add(order);
+                list.add(restaurant);
             }
-
             return list;
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
         return null;
     }
-
-
-/*    // test dao
-    public static void main(String[] args) {
-        OrderDAO dao = new OrderDAO();
-
-        Order order = new Order();
-        order.setPrice(24.32);
-        order.setMeals("Doco");
-        order.setTax(24.32);
-        order.setDriver_name("Humayan ALi");
-
-//        Order order1 = dao.create(order);
-//        System.out.println(order1);
-
-//        order.setOrder_id(4);
-//        dao.update(order);
-
-        System.out.println(dao.findAll());
-    }*/
-
 }

@@ -81,3 +81,31 @@ INSERT INTO admin (cust_name, all_orders, rest_menu, order_id)
 VALUES ('Zohan Hasan', 'All Order 3', 'Rest Menu 3', 3);
 INSERT INTO admin (cust_name, all_orders, rest_menu, order_id)
 VALUES ('Hasan Mia', 'All Order 4', 'Rest Menu 4', 4);
+
+-- create customer table
+create table customer
+(
+    cust_id    int(10) primary key auto_increment,
+    full_name  varchar(256) not null,
+    address    varchar(256) not null,
+    past_order int,
+    order_t    int,
+    admin_id   int,
+    reg_id     int,
+    FOREIGN KEY (past_order) REFERENCES order_t (order_id),
+    FOREIGN KEY (order_t) REFERENCES order_t (order_id),
+    FOREIGN KEY (admin_id) REFERENCES admin (admin_id),
+    FOREIGN KEY (reg_id) REFERENCES registration (rest_id)
+);
+
+-- insert into customer db
+INSERT INTO customer (full_name, address, past_order, order_t, admin_id, reg_id)
+VALUES ('Mohammad ALi', 'Jeddah', 1, 2, 1, 1);
+INSERT INTO customer (full_name, address, past_order, order_t, admin_id, reg_id)
+VALUES ('Hasan ALi', 'Mokka', 2, 1, 2, 2);
+INSERT INTO customer (full_name, address, past_order, order_t, admin_id, reg_id)
+VALUES ('Enayet Khalil', 'Riyadh', 3, 4, 3, 3);
+INSERT INTO customer (full_name, address, past_order, order_t, admin_id, reg_id)
+VALUES ('Golam Mostafa', 'Riyadh', 4, 3, 4, 4);
+
+
