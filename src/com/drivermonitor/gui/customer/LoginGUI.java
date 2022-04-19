@@ -120,15 +120,12 @@ public class LoginGUI extends Scene implements EventHandler<ActionEvent> {
         String email = emailTxtFld.getText();
         String pass = passTxtFld.getText();
 
-        System.out.println("Email: " + email);
-        System.out.println("Pass: " + pass);
-        System.out.println(pass);
-
         if (email.equals("") || pass.equals("")) {
             warningLabel.setText("email or password can't be empty");
         }
 
         Customer customer = null;
+        Registration registration = null;
         for (Registration reg : regDao.findAll()) {
             // check email and pass
             if (reg.getEmail().equals(email) && reg.getPass().equals(pass)) {
@@ -136,6 +133,7 @@ public class LoginGUI extends Scene implements EventHandler<ActionEvent> {
                 for (Customer cus : cusDao.findAll()) {
                     if (cus.getReg_id() == reg.getReg_id()) {
                         customer = cus;
+                        registration = reg;
                     }
                 }
             }
@@ -143,11 +141,12 @@ public class LoginGUI extends Scene implements EventHandler<ActionEvent> {
 
         // if customer font and validation done and customer is not null-> login success
         if (customer != null) {
-            CustomerProfileGUI customerGUI = (CustomerProfileGUI) MainApplication.scenes.get("customer_profile_panel");
-            customerGUI.setCustomer(customer);
-            primaryStage.setScene(customerGUI);
+            VBox vBox = new VBox(15);
+            CustomerProfileGUI customerProfileGUI = new CustomerProfileGUI(primaryStage, vBox);
+            customerProfileGUI.setData(customer, registration);
+            primaryStage.setScene(customerProfileGUI);
             warningLabel.setText("");
-        }else {
+        } else {
             warningLabel.setText("Invalid username or password! try again");
         }
     }

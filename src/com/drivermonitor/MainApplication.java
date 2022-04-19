@@ -26,7 +26,7 @@ public class MainApplication extends Application {
         scenes.put("customer_panel",new CustomerPanelGUI(primaryStage));
         scenes.put("rest_panel",new RestaurantPanelGUI(primaryStage));
         scenes.put("order_panel",new OrderPanelGUI(primaryStage));
-        scenes.put("customer_profile_panel",new CustomerProfileGUI(primaryStage));
+//        scenes.put("customer_profile_panel",new CustomerProfileGUI(primaryStage));
 
         primaryStage.setScene(scenes.get("home"));
         primaryStage.show();

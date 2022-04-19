@@ -1,7 +1,10 @@
 package com.drivermonitor.gui.customer;
 
 import com.drivermonitor.MainApplication;
+import com.drivermonitor.database.dao.RegistrationDAO;
 import com.drivermonitor.database.pojo.Customer;
+import com.drivermonitor.database.pojo.Registration;
+import com.drivermonitor.uitls.CustomerData;
 import com.drivermonitor.uitls.Utils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -10,6 +13,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -17,29 +21,32 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public class CustomerProfileGUI extends Scene implements EventHandler<ActionEvent> {
+public class CustomerProfileGUI extends Scene implements EventHandler<ActionEvent>, CustomerData {
 
     // set root layout based on need
-    private static final VBox root = new VBox(15);
-    private static final int WIDTH = 350;
-    private static final int HEIGHT = 500;
-    private static final String TITLE = "Customer Profile";
-    private final Stage primaryStage;
-    private Customer customer;
+    private VBox root ;
+    private int WIDTH = 350;
+    private int HEIGHT = 500;
+    private String TITLE = "Customer Profile";
+    private Stage primaryStage;
+
 
     // init buttons
     private Button signoutBtn;
     private Button orderBtn;
     private Button pastOrderBtn;
 
+    private Label nameLbl, phoneLbl, emailLbl;
+    private CheckBox medaCkBox, stcpayCkBox;
 
-    public CustomerProfileGUI(Stage primaryStage) {
-        super(root, WIDTH, HEIGHT);
+    public CustomerProfileGUI(Stage primaryStage, VBox root) {
+        super(root, 350, 500);
+        this.root = root;
         this.primaryStage = primaryStage;
         primaryStage.setTitle(TITLE);
 
         // customize header & add design in root layout
-        root.setAlignment(Pos.TOP_CENTER);
+        root.setAlignment(Pos.CENTER_LEFT);
         root.setBackground(Utils.getBackground(Color.WHITESMOKE));
         root.setPadding(new Insets(50, 20, 20, 20));
 
@@ -47,14 +54,6 @@ public class CustomerProfileGUI extends Scene implements EventHandler<ActionEven
         createHeadingGUI();
 
         createHomeGUI();
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
     }
 
     // create header
@@ -77,14 +76,24 @@ public class CustomerProfileGUI extends Scene implements EventHandler<ActionEven
         signoutBtn.setOnAction(this);
         orderBtn.setOnAction(this);
         pastOrderBtn.setOnAction(this);
-        
 
+        nameLbl = new Label("Name: ");
+        phoneLbl = new Label("Phone: ");
+        emailLbl = new Label("Email: ");
+
+        medaCkBox = new CheckBox("Meda");
+        stcpayCkBox = new CheckBox("STCPAY");
+
+        medaCkBox.setSelected(true);
+        medaCkBox.setOnAction(this);
+        stcpayCkBox.setOnAction(this);
 
         // init all horizontal box
         HBox buttonsHBox = Utils.getFormattedHBox(signoutBtn, orderBtn, pastOrderBtn);
+        HBox paymentHBox = Utils.getFormattedHBox(new Label("Payment Method "), medaCkBox, stcpayCkBox);
 
         // add all children
-        addChildren(buttonsHBox);
+        addChildren(nameLbl, phoneLbl, emailLbl, paymentHBox, buttonsHBox);
     }
 
 
@@ -101,9 +110,20 @@ public class CustomerProfileGUI extends Scene implements EventHandler<ActionEven
             primaryStage.setScene(MainApplication.scenes.get("home"));
         }
 
-        // back button button
         if (event.getSource().equals(orderBtn)) {
             handleOrderBtnAction();
+        }
+
+        if (event.getSource().equals(pastOrderBtn)) {
+            handlePastOrderBtnAction();
+        }
+
+        if (event.getSource().equals(medaCkBox)) {
+            stcpayCkBox.setSelected(false);
+        }
+
+        if (event.getSource().equals(medaCkBox)) {
+            medaCkBox.setSelected(false);
         }
     }
 
@@ -115,5 +135,12 @@ public class CustomerProfileGUI extends Scene implements EventHandler<ActionEven
     // past order button
     private void handlePastOrderBtnAction() {
 
+    }
+
+    @Override
+    public void setData(Customer customer, Registration registration) {
+        nameLbl.setText(nameLbl.getText() + "" + customer.getFull_name());
+        phoneLbl.setText(phoneLbl.getText() + "" + registration.getPhone_num());
+        emailLbl.setText(emailLbl.getText() + "" + registration.getEmail());
     }
 }
