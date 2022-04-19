@@ -72,10 +72,10 @@ public class RegistrationGUI extends Scene implements EventHandler<ActionEvent> 
     // init all registration levels & fields
     private void createRegistrationGui() {
 
-        fullNameTxtFld = new TextField("Enter full name");
-        usernameTxtFld = new TextField("Enter username");
-        phoneTxtFld = new TextField("Enter phone number");
-        emailTxtFld = new TextField("Enter email");
+        fullNameTxtFld = new TextField("");
+        usernameTxtFld = new TextField("");
+        phoneTxtFld = new TextField("");
+        emailTxtFld = new TextField("");
         passwordTxtFld = new PasswordField();
 
         maleCkBox = new CheckBox("Male");
@@ -168,19 +168,14 @@ public class RegistrationGUI extends Scene implements EventHandler<ActionEvent> 
         String phone = phoneTxtFld.getText();
         String email = emailTxtFld.getText();
         String password = emailTxtFld.getText();
-        String gender = getGender();
-        String user = getUser();
+        String userType = getUserType();
 
         System.out.println("User Registration");
     }
 
-    // return gender from checkbox
-    private String getGender() {
-        return "";
-    }
 
     // return user type from checkbox
-    private String getUser() {
+    private String getUserType() {
         return "";
     }
 }

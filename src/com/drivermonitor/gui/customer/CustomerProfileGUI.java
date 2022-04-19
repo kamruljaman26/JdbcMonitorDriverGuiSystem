@@ -1,8 +1,9 @@
 package com.drivermonitor.gui.customer;
 
 import com.drivermonitor.MainApplication;
-import com.drivermonitor.database.dao.RegistrationDAO;
+import com.drivermonitor.database.dao.OrderDAO;
 import com.drivermonitor.database.pojo.Customer;
+import com.drivermonitor.database.pojo.Order;
 import com.drivermonitor.database.pojo.Registration;
 import com.drivermonitor.uitls.CustomerData;
 import com.drivermonitor.uitls.Utils;
@@ -24,12 +25,14 @@ import javafx.stage.Stage;
 public class CustomerProfileGUI extends Scene implements EventHandler<ActionEvent>, CustomerData {
 
     // set root layout based on need
-    private VBox root ;
+    private VBox root;
     private int WIDTH = 350;
     private int HEIGHT = 500;
     private String TITLE = "Customer Profile";
     private Stage primaryStage;
 
+    private Customer customer;
+    private Registration registration;
 
     // init buttons
     private Button signoutBtn;
@@ -38,6 +41,7 @@ public class CustomerProfileGUI extends Scene implements EventHandler<ActionEven
 
     private Label nameLbl, phoneLbl, emailLbl;
     private CheckBox medaCkBox, stcpayCkBox;
+    private Label warningLbl;
 
     public CustomerProfileGUI(Stage primaryStage, VBox root) {
         super(root, 350, 500);
@@ -46,7 +50,7 @@ public class CustomerProfileGUI extends Scene implements EventHandler<ActionEven
         primaryStage.setTitle(TITLE);
 
         // customize header & add design in root layout
-        root.setAlignment(Pos.CENTER_LEFT);
+        root.setAlignment(Pos.TOP_CENTER);
         root.setBackground(Utils.getBackground(Color.WHITESMOKE));
         root.setPadding(new Insets(50, 20, 20, 20));
 
@@ -80,6 +84,9 @@ public class CustomerProfileGUI extends Scene implements EventHandler<ActionEven
         nameLbl = new Label("Name: ");
         phoneLbl = new Label("Phone: ");
         emailLbl = new Label("Email: ");
+        warningLbl = new Label("");
+        warningLbl.setTextFill(Color.GREEN);
+        warningLbl.setAlignment(Pos.BOTTOM_CENTER);
 
         medaCkBox = new CheckBox("Meda");
         stcpayCkBox = new CheckBox("STCPAY");
@@ -93,7 +100,7 @@ public class CustomerProfileGUI extends Scene implements EventHandler<ActionEven
         HBox paymentHBox = Utils.getFormattedHBox(new Label("Payment Method "), medaCkBox, stcpayCkBox);
 
         // add all children
-        addChildren(nameLbl, phoneLbl, emailLbl, paymentHBox, buttonsHBox);
+        addChildren(nameLbl, phoneLbl, emailLbl, paymentHBox, buttonsHBox, warningLbl);
     }
 
 
@@ -129,16 +136,36 @@ public class CustomerProfileGUI extends Scene implements EventHandler<ActionEven
 
     // order button
     private void handleOrderBtnAction() {
+        //double tax, String meals, double price, String driver_name
+        Order order = new Order();
+        order.setTax(getRandomNumber(1, 100));
+        order.setMeals("Meal " + getRandomNumber(1, 100));
+        order.setPrice(getRandomNumber(1, 100));
+        order.setDriver_name(customer.getFull_name());
 
+        OrderDAO dao = new OrderDAO();
+        dao.create(order);
+
+        warningLbl.setText("Order created successfully!");
+    }
+
+    public int getRandomNumber(int min, int max) {
+        return (int) ((Math.random() * (max - min)) + min);
     }
 
     // past order button
     private void handlePastOrderBtnAction() {
-
+        OrderDAO dao = new OrderDAO();
+        Order order = dao.findByID(customer.getPast_order());
+        warningLbl.setText(String.format("Past OrderInfo: Order id: %d\nTax: %.2f\nMeal: %s,\nPrice %.2f\nDriver Name: %s",
+                order.getOrder_id(), order.getTax(), order.getMeals(), order.getPrice(), order.getDriver_name()));
     }
 
     @Override
     public void setData(Customer customer, Registration registration) {
+        this.customer = customer;
+        this.registration = registration;
+
         nameLbl.setText(nameLbl.getText() + "" + customer.getFull_name());
         phoneLbl.setText(phoneLbl.getText() + "" + registration.getPhone_num());
         emailLbl.setText(emailLbl.getText() + "" + registration.getEmail());
